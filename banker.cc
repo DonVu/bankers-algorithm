@@ -4,6 +4,7 @@
 //  the banker's algorithm.
 
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 #define NUMBER_OF_CUSTOMERS 5
@@ -27,11 +28,36 @@ int RequestResources(int customernum, int request[]);
 //  threads release the resources
 int ReleaseResources(int customernum, int release[]);
 
+void PrintTable(int table[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES]);
+
 int main (int argc, char *argv[]) {
   if (argc != 5) {
     cerr << "Usage of the program is: " << argv[0] 
       << " resourcenum1 resourcenum2 resourcenum3 customerneedsfilename\n";
   }
+
+  ifstream customerfile (argv[4]);
+
+  if (!customerfile.is_open()) {
+    cerr << "Error opening file\n";
+    return 1;
+  }
+
+  //  fill the maximum array for each customer
+  int fileinput;
+  int rowcounter = 0;
+  int inputcounter = 0; 
+  while (customerfile >> fileinput) {
+    if (inputcounter == 2) {
+      ++rowcounter;
+      inputcounter = 0;
+    }
+    
+    maximum[rowcounter][inputcounter] = fileinput;
+    ++inputcounter;
+  }
+
+  customerfile.close();
 }
 
 int RequestResources(int customernum, int request[]) {
@@ -42,4 +68,8 @@ int RequestResources(int customernum, int request[]) {
 int ReleaseResources(int customernum, int release[]) {
 
   return 0;
+}
+
+void PrintTable(int table[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES]) {
+
 }
