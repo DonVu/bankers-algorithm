@@ -28,9 +28,9 @@ int RequestResources(int customernum, int request[]);
 int ReleaseResources(int customernum, int release[]);
 
 int main (int argc, char *argv[]) {
-  if (argc != 4) {
+  if (argc != 5) {
     cerr << "Usage of the program is: " << argv[0] 
-      << " resourcenum1 resourcenum2 resourcenum3\n";
+      << " resourcenum1 resourcenum2 resourcenum3 customerneedsfilename\n";
   }
 }
 
