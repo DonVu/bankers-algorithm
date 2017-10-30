@@ -21,9 +21,25 @@ int allocation[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES];
 //  the remaining need of each customer
 int need[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES];
 
+//  threads request the resources
+int RequestResources(int customernum, int request[]);
+
+//  threads release the resources
+int ReleaseResources(int customernum, int release[]);
+
 int main (int argc, char *argv[]) {
   if (argc != 4) {
     cerr << "Usage of the program is: " << argv[0] 
       << " resourcenum1 resourcenum2 resourcenum3\n";
   }
+}
+
+int RequestResources(int customernum, int request[]) {
+
+  return 0;
+}
+
+int ReleaseResources(int customernum, int release[]) {
+
+  return 0;
 }
