@@ -46,7 +46,7 @@ int main (int argc, char *argv[]) {
   available[2] = stoi(argv[3]);
   available[3] = stoi(argv[4]);
 
-  ifstream customerfile (argv[6]);
+  ifstream customerfile (argv[5]);
 
   if (!customerfile.is_open()) {
     cerr << "Error opening file\n";
@@ -59,16 +59,17 @@ int main (int argc, char *argv[]) {
   int rowcounter = 0;
   int inputcounter = 0; 
   while (customerfile >> fileinput) {
-    if (inputcounter == 3) {
+    if (inputcounter == NUMBER_OF_RESOURCES) {
       ++rowcounter;
       inputcounter = 0;
     }
-    
+
     maximum[rowcounter][inputcounter] = fileinput;
     ++inputcounter;
   }
 
   customerfile.close();
+  PrintTable(maximum); 
 }
 
 int RequestResources(int customernum, int request[]) {
@@ -82,5 +83,12 @@ int ReleaseResources(int customernum, int release[]) {
 }
 
 void PrintTable(int table[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES]) {
+  cout  << "Table is: \n"; 
 
+  for (int i = 0; i < NUMBER_OF_CUSTOMERS; ++i) {
+    for (int j = 0; j < NUMBER_OF_RESOURCES; ++j)
+      cout << table[i][j] << " ";
+    
+    cout << endl; 
+  }
 }
