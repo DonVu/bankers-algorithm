@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 using namespace std;
 
 #define NUMBER_OF_CUSTOMERS 5
@@ -39,10 +40,17 @@ int main (int argc, char *argv[]) {
     return 1;
   }
 
+  //  populate the available resources from command line 
+  available[0] = stoi(argv[1]);
+  available[1] = stoi(argv[2]);
+  available[2] = stoi(argv[3]);
+  available[3] = stoi(argv[4]);
+
   ifstream customerfile (argv[6]);
 
   if (!customerfile.is_open()) {
     cerr << "Error opening file\n";
+   
     return 1;
   }
 
