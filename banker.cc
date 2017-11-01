@@ -31,6 +31,8 @@ int ReleaseResources(int customernum, int release[]);
 
 void PrintTable(int table[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES]);
 
+//  determines if the system is in a safe state
+//  for allocating resources
 bool IsSystemSafe();
 
 int main (int argc, char *argv[]) {
