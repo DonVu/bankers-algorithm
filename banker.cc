@@ -73,7 +73,11 @@ int main (int argc, char *argv[]) {
   }
 
   customerfile.close();
-  IsSystemSafe(); 
+  
+  //  fill the need array by max[][] - allocation[][]
+  for (int i = 0; i < NUMBER_OF_CUSTOMERS; ++i)
+    for (int j = 0; j < NUMBER_OF_RESOURCES; ++j)
+      need[i][j] = maximum[i][j] - allocation[i][j];
 }
 
 int RequestResources(int customernum, int request[]) {
@@ -103,7 +107,6 @@ void PrintTable(int table[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES]) {
 //  allocate resources 
 bool IsSystemSafe() {
   int work[NUMBER_OF_RESOURCES];
-
   for (int i = 0; i < NUMBER_OF_RESOURCES; ++i)
     work[i] = available[i];
 
@@ -114,10 +117,11 @@ bool IsSystemSafe() {
   bool workdone = true;
   while (workdone) {
     workdone = false;
+
     for (int i = 0; i < NUMBER_OF_CUSTOMERS; ++i) {
       bool enoughresources = true;
      
-      for (int j = 0; j < NUMBER_OF_RESOURCES; ++i) {
+      for (int j = 0; j < NUMBER_OF_RESOURCES; ++j) {
         if (need[i][j] > work[j])
           enoughresources = false;
       }
