@@ -8,7 +8,7 @@
 using namespace std;
 
 #define NUMBER_OF_CUSTOMERS 5
-#define NUMBER_OF_RESOURCES 3
+#define NUMBER_OF_RESOURCES 4
 
 //  the available amount of resources
 int available[NUMBER_OF_RESOURCES];
@@ -31,12 +31,15 @@ int ReleaseResources(int customernum, int release[]);
 void PrintTable(int table[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES]);
 
 int main (int argc, char *argv[]) {
-  if (argc != 5) {
+  if (argc != 6) {
     cerr << "Usage of the program is: " << argv[0] 
-      << " resourcenum1 resourcenum2 resourcenum3 customerneedsfilename\n";
+      << " resourcenum1 resourcenum2 resourcenum3" <<
+      " resourcenum4 customerneedsfilename\n";
+
+    return 1;
   }
 
-  ifstream customerfile (argv[4]);
+  ifstream customerfile (argv[6]);
 
   if (!customerfile.is_open()) {
     cerr << "Error opening file\n";
@@ -48,7 +51,7 @@ int main (int argc, char *argv[]) {
   int rowcounter = 0;
   int inputcounter = 0; 
   while (customerfile >> fileinput) {
-    if (inputcounter == 2) {
+    if (inputcounter == 3) {
       ++rowcounter;
       inputcounter = 0;
     }
