@@ -81,6 +81,17 @@ int main (int argc, char *argv[]) {
 }
 
 int RequestResources(int customernum, int request[]) {
+  //  check if the request is greater than
+  //  the process's declared maximum resource use 
+  for (int i = 0; i < NUMBER_OF_RESOURCES; ++i) {
+    if (request[i] > need[customernum][i]) {
+      cerr << "Thread " << customernum 
+        << " is exceeding maximum resouces\n";
+    
+      return 1;
+    }
+  }
+
 
   return 0;
 }
