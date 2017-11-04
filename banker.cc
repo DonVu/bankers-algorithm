@@ -33,7 +33,7 @@ int need[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES];
 int RequestResources(int customernum, int request[]);
 
 //  threads release the resources
-int ReleaseResources(int customernum, int release[]);
+int ReleaseResources(int customernum);
 
 void PrintTable(int table[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES]);
 
@@ -88,6 +88,7 @@ int main (int argc, char *argv[]) {
       need[i][j] = maximum[i][j] - allocation[i][j];
 
   pthread_mutex_init(&mutexresources, NULL);
+  srand(time(NULL)); 
   pthread_t customerthreads[NUMBER_OF_CUSTOMERS];
   for (int i = 0; i < NUMBER_OF_CUSTOMERS; ++i) {
     int *customernumber = new int(i);
@@ -129,8 +130,8 @@ int RequestResources(int customernum, int request[]) {
   //  allocate the resources
   for (int i = 0; i < NUMBER_OF_RESOURCES; ++i) {
     available[i] -= request[i];
-    allocation[customernum][i] += request[i];
-    need[customernum][i] -= request[i];
+    allocation[customernum - 1][i] += request[i];
+    need[customernum - 1][i] -= request[i];
   }
 
   //  if granting request leaves system unsafe
@@ -140,8 +141,8 @@ int RequestResources(int customernum, int request[]) {
     
     for (int i = 0; i < NUMBER_OF_RESOURCES; ++i) {
       available[i] += request[i];
-      allocation[customernum][i] -= request[i];
-      need[customernum][i] += request[i];
+      allocation[customernum - 1][i] -= request[i];
+      need[customernum - 1][i] += request[i];
     }
 
     return 0;
@@ -153,7 +154,11 @@ int RequestResources(int customernum, int request[]) {
   return 0;
 }
 
-int ReleaseResources(int customernum, int release[]) {
+int ReleaseResources(int customernum) {
+  for (int i = 0; i < NUMBER_OF_RESOURCES; ++i) {
+    available[i] += allocation[customernum - 1][i];  
+    allocation[customernum - 1][i] = 0;
+  }
 
   return 0;
 }
@@ -225,20 +230,32 @@ void *Runner(void *arg) {
     needsresources = false;
 
     for (int i = 0; i < NUMBER_OF_RESOURCES; ++i) 
-      if (need[customerId][i] != 0) 
+      if (need[customerId - 1][i] != 0) 
         needsresources = true;
     
-    srand(time(NULL));  
-    int request[NUMBER_OF_RESOURCES];
-    for (int i = 0; i < NUMBER_OF_RESOURCES; ++i)
-      request[i] = rand() % (need[customerId][i] + 1);
+    if (needsresources) {
+      int request[NUMBER_OF_RESOURCES];
+      for (int i = 0; i < NUMBER_OF_RESOURCES; ++i) {
+        if (need[customerId - 1][i] > 0) {
+          int resourcerequest = need[customerId - 1][i] + 1;
+          request[i] = rand() % resourcerequest;
+        } else {
+          request[i] = 0;
+        }
+      }
  
-    //  lock to prevent race conditions
-    pthread_mutex_lock(&mutexresources);      
-    RequestResources(customerId, request);
-    pthread_mutex_unlock(&mutexresources);
+      //  lock to prevent race conditions
+      pthread_mutex_lock(&mutexresources);  
+    
+      RequestResources(customerId, request);
+    
+      if (!needsresources)
+        ReleaseResources(customerId);
 
-    sleep(3);   
+      pthread_mutex_unlock(&mutexresources);
+    }
+
+    sleep(1);   
   }    
     
   pthread_exit(NULL);
