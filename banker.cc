@@ -54,7 +54,7 @@ int main (int argc, char *argv[]) {
 
   if (!customerfile.is_open()) {
     cerr << "Error opening file\n";
-   
+  
     return 1;
   }
 
@@ -78,13 +78,15 @@ int main (int argc, char *argv[]) {
   for (int i = 0; i < NUMBER_OF_CUSTOMERS; ++i)
     for (int j = 0; j < NUMBER_OF_RESOURCES; ++j)
       need[i][j] = maximum[i][j] - allocation[i][j];
+ 
+  return 0;
 }
 
 int RequestResources(int customernum, int request[]) {
   //  check if the request is greater than
   //  the process's declared maximum resource use 
   for (int i = 0; i < NUMBER_OF_RESOURCES; ++i) {
-    if (request[i] > need[customernum][i]) {
+    if (request[i] > need[customernum - 1][i]) {
       cerr << "Thread " << customernum 
         << " is exceeding maximum resouces\n";
     
