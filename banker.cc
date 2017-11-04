@@ -94,6 +94,16 @@ int RequestResources(int customernum, int request[]) {
     }
   }
 
+  //  check if the request is greater than
+  //  the system's available resources
+  for (int i = 0; i < NUMBER_OF_RESOURCES; ++i) {
+    if (request[i] > available[i]) {
+      cout << "Requested resources are not available\n";
+    
+      return 0;
+    }
+  }
+
 
   return 0;
 }
