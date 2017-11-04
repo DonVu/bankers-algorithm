@@ -79,6 +79,8 @@ int main (int argc, char *argv[]) {
     for (int j = 0; j < NUMBER_OF_RESOURCES; ++j)
       need[i][j] = maximum[i][j] - allocation[i][j];
  
+  int request[4] = {1, 1, 1, 1};
+  RequestResources(1, request);
   return 0;
 }
 
@@ -104,6 +106,29 @@ int RequestResources(int customernum, int request[]) {
     }
   }
 
+  //  allocate the resources
+  for (int i = 0; i < NUMBER_OF_RESOURCES; ++i) {
+    available[i] -= request[i];
+    allocation[customernum][i] += request[i];
+    need[customernum][i] -= request[i];
+  }
+
+  //  if granting request leaves system unsafe
+  //  then restore the old system state
+  if (!IsSystemSafe()) {
+    cout << "System request is unsafe. Request denied\n";
+    
+    for (int i = 0; i < NUMBER_OF_RESOURCES; ++i) {
+      available[i] += request[i];
+      allocation[customernum][i] -= request[i];
+      need[customernum][i] += request[i];
+    }
+
+    return 0;
+  }
+
+  cout << "Request for thread: " << customernum 
+    << " has been granted\n";
 
   return 0;
 }
