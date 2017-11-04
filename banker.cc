@@ -9,6 +9,7 @@
 #include <pthread.h>
 #include <cstdlib>
 #include <ctime>
+#include <unistd.h>
 using namespace std;
 
 #define NUMBER_OF_CUSTOMERS 5
@@ -228,13 +229,10 @@ void *Runner(void *arg) {
     int request[NUMBER_OF_RESOURCES];
     for (int i = 0; i < NUMBER_OF_RESOURCES; ++i)
       request[i] = rand() % (need[customerId][i] + 1);
-   
+       
+    RequestResources(customerId, request);
 
-    for (int i = 0; i < NUMBER_OF_RESOURCES; ++i)
-      cout << request[i] << " ";
-
-    cout << endl;
-    needsresources = false;
+    sleep(3);   
   }    
     
 }
