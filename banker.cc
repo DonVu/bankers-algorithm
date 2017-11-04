@@ -7,6 +7,8 @@
 #include <fstream>
 #include <string>
 #include <pthread.h>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 
 #define NUMBER_OF_CUSTOMERS 5
@@ -212,5 +214,28 @@ bool IsSystemSafe() {
 
 void *Runner(void *arg) {
   int *customernum = (int *) arg;
+  int customerId = *customernum;
+
+  bool needsresources = true;
+  while (needsresources) {
+    needsresources = false;
+
+    for (int i = 0; i < NUMBER_OF_RESOURCES; ++i) 
+      if (need[customerId][i] != 0) 
+        needsresources = true;
+    
+    srand(time(NULL));  
+    int request[NUMBER_OF_RESOURCES];
+    for (int i = 0; i < NUMBER_OF_RESOURCES; ++i)
+      request[i] = rand() % (need[customerId][i] + 1);
+   
+
+    for (int i = 0; i < NUMBER_OF_RESOURCES; ++i)
+      cout << request[i] << " ";
+
+    cout << endl;
+    needsresources = false;
+  }    
+    
 }
 
