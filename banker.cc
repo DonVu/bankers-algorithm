@@ -15,6 +15,8 @@ using namespace std;
 #define NUMBER_OF_CUSTOMERS 5
 #define NUMBER_OF_RESOURCES 4
 
+pthread_mutex_t mutexresources;
+
 //  the available amount of resources
 int available[NUMBER_OF_RESOURCES];
 
@@ -84,7 +86,8 @@ int main (int argc, char *argv[]) {
   for (int i = 0; i < NUMBER_OF_CUSTOMERS; ++i)
     for (int j = 0; j < NUMBER_OF_RESOURCES; ++j)
       need[i][j] = maximum[i][j] - allocation[i][j];
- 
+
+  pthread_mutex_init(&mutexresources, NULL);
   pthread_t customerthreads[NUMBER_OF_CUSTOMERS];
   for (int i = 0; i < NUMBER_OF_CUSTOMERS; ++i) {
     int *customernumber = new int(i);
@@ -229,11 +232,15 @@ void *Runner(void *arg) {
     int request[NUMBER_OF_RESOURCES];
     for (int i = 0; i < NUMBER_OF_RESOURCES; ++i)
       request[i] = rand() % (need[customerId][i] + 1);
-       
+ 
+    //  lock to prevent race conditions
+    pthread_mutex_lock(&mutexresources);      
     RequestResources(customerId, request);
+    pthread_mutex_unlock(&mutexresources);
 
     sleep(3);   
   }    
     
+  pthread_exit(NULL);
 }
 
