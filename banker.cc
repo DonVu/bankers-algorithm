@@ -37,6 +37,8 @@ int ReleaseResources(int customernum);
 
 void PrintTable(int table[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES]);
 
+void PrintAll();
+
 //  determines if the system is in a safe state
 //  for allocating resources
 bool IsSystemSafe();
@@ -150,6 +152,8 @@ int RequestResources(int customernum, int request[]) {
 
   cout << "Request for thread: " << customernum 
     << " has been granted\n";
+  
+  PrintAll();
 
   return 0;
 }
@@ -164,8 +168,6 @@ int ReleaseResources(int customernum) {
 }
 
 void PrintTable(int table[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES]) {
-  cout  << "Table is: \n"; 
-
   for (int i = 0; i < NUMBER_OF_CUSTOMERS; ++i) {
     for (int j = 0; j < NUMBER_OF_RESOURCES; ++j)
       cout << table[i][j] << " ";
@@ -174,6 +176,21 @@ void PrintTable(int table[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES]) {
   }
 }
 
+void PrintAll() {
+ cout << "Available: \n";
+ for (int i = 0; i < NUMBER_OF_RESOURCES; ++i)
+   cout << available[i] << " ";
+
+  cout << "\nMaximum: \n";
+  PrintTable(maximum);
+
+  cout << "Allocation: \n";
+  PrintTable(allocation);
+
+  cout << "Need: \n";
+  PrintTable(need); 
+
+}
 
 //  continually loops around until
 //  it cannot find a process to 
