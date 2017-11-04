@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <pthread.h>
 using namespace std;
 
 #define NUMBER_OF_CUSTOMERS 5
@@ -34,6 +35,8 @@ void PrintTable(int table[NUMBER_OF_CUSTOMERS][NUMBER_OF_RESOURCES]);
 //  determines if the system is in a safe state
 //  for allocating resources
 bool IsSystemSafe();
+
+void *Runner(void *arg);
 
 int main (int argc, char *argv[]) {
   if (argc != 6) {
@@ -79,8 +82,19 @@ int main (int argc, char *argv[]) {
     for (int j = 0; j < NUMBER_OF_RESOURCES; ++j)
       need[i][j] = maximum[i][j] - allocation[i][j];
  
-  int request[4] = {1, 1, 1, 1};
-  RequestResources(1, request);
+  pthread_t customerthreads[NUMBER_OF_CUSTOMERS];
+  for (int i = 0; i < NUMBER_OF_CUSTOMERS; ++i) {
+    int *customernumber = new int(i);
+    pthread_create(&customerthreads[i], NULL, Runner, (void *) customernumber);
+
+  }
+
+  for (int i = 0; i < NUMBER_OF_CUSTOMERS; ++i)
+    pthread_join(customerthreads[i], NULL);
+
+  cout << "Finished joining.\n";
+  
+  
   return 0;
 }
 
@@ -194,5 +208,9 @@ bool IsSystemSafe() {
       IsSafe = false;
 
   return IsSafe;   
+}
+
+void *Runner(void *arg) {
+  int *customernum = (int *) arg;
 }
 
